@@ -16,4 +16,6 @@ public class Caracteristicas
     }
 
     public Caracteristicas(){}
+    // Constructor sin parámetros para soporte de deserialización JSON
+
 }

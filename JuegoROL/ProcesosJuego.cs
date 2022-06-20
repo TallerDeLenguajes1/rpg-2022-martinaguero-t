@@ -32,6 +32,7 @@ public class ProcesosJuego
                 MostrarYBonificarGanadorRonda(listaPersonajes, jugador1, jugador2);
 
                 numRonda++;
+                Console.WriteLine("Presione cualquier tecla para empezar la próxima ronda:");
                 Console.ReadLine();
                 
             }
@@ -45,7 +46,7 @@ public class ProcesosJuego
         } else {
 
             Console.WriteLine("Hubo un error en la carga de los personajes. Intente nuevamente.");
-            
+
         }
 
     }
@@ -191,107 +192,4 @@ public class ProcesosJuego
 
     }
 
-    /*
-    public static void ConsultarSobreCargaPersonajes(){
-
-        int consulta = 1;
-        var listaPersonajes = new List<Personaje>();
-
-        do
-        {
-            Console.WriteLine("¿Desea cargar personajes (desde archivo JSON) o generarlos aleatoriamente?");
-            Console.WriteLine("1) Cargar desde archivo JSON");
-            Console.WriteLine("2) Generar aleatoriamente");
-            int.TryParse(Console.ReadLine(), out consulta);
-
-        } while (consulta < 1 || consulta > 2);
-
-        if(consulta == 1){
-            
-            bool existeArchivo = false;
-
-            do
-            {
-                Console.WriteLine("Indique la ruta del archivo JSON: ");
-                string rutaArchivo = Console.ReadLine();
-
-                existeArchivo = File.Exists(rutaArchivo);
-
-                if(existeArchivo){
-
-                    StreamReader reader = new StreamReader(rutaArchivo);
-                    // CONSULTA: ¿está bien cerrar el stream en todos los casos?
-                    
-                    string datosPersonajes = reader.ReadLine();
-
-                    if(!string.IsNullOrEmpty(datosPersonajes)){
-                        
-                        try
-                        {
-                            listaPersonajes = JsonSerializer.Deserialize<List<Personaje>>(reader.ReadLine());
-
-                            if(listaPersonajes.Count < 2){
-                                
-                                reader.Close();
-                                
-                                Console.WriteLine("ERROR: Hubo un error al leer los personajes. Se generarán aleatoriamente...");
-                                CargarPersonajes(listaPersonajes);
-                                // Si la lista está vacía o tiene un solo personaje, no se considera válida para el combate pues se necesitan al menos dos personajes. Entonces, se generan aleatoriamente los personajes.
-
-                            } 
-                        }
-                        catch
-                        {
-                            reader.Close();
-
-                            Console.WriteLine("ERROR: El archivo JSON contiene información inválida. Se generarán los personajes aleatoriamente... ");
-                            CargarPersonajes(listaPersonajes);
-                        }
-                        
-                        // Consulta: está bien trabajar de esta manera?
-                        
-
-                    } else {
-
-                        reader.Close();
-
-                        Console.WriteLine("ERROR: No se encontró información de personajes. Se generarán aleatoriamente... ");
-                        CargarPersonajes(listaPersonajes);
-
-                        // Si el archivo está vacío, se generarán aleatoriamente los personajes.
-
-                    }
-
-                    reader.Close();
-
-                } else {
-
-                    Console.WriteLine("No se encontró el archivo buscado. ¿Desea ingresar otra ruta o cargar personajes aleatoriamente?");
-                    do
-                    {
-                        Console.WriteLine("1) Ingresar nueva ruta");
-                        Console.WriteLine("2) Cargar aleatoriamente");
-                        int.TryParse(Console.ReadLine(),out consulta);
-
-                    } while (consulta < 1 || consulta > 2);
-
-                }
-
-            } while (!existeArchivo && consulta != 2);
-            
-            CargarPersonajes(listaPersonajes);
-            // En el caso en que se haya decidido cargar personajes aleatoriamente.
-
-        } else {
-
-            CargarPersonajes(listaPersonajes);
-
-        }
-
-        Console.Write("\n");
-
-        DesarrollarJuegoPorRondas(listaPersonajes);
-
-    }
-    */
 }

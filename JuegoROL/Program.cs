@@ -16,7 +16,6 @@ class Program {
         do
         {
             Console.WriteLine("====== JUEGO DE ROL ======");    
-
             do
             {  
                 Console.WriteLine("--> Elija alguna de las siguientes opciones: \n1) Jugar \n2) Mostrar historial de partidas \n3) Salir del juego");
@@ -44,11 +43,10 @@ class Program {
 
     }
 
-    // CONSULTA : consultar sobre los métodos implementados y el uso de ref. ¿Por qué no hizo falta en las funciones que modifican los personajes? 
 
     public static List<Personaje> ConsultarSobreCargaPersonajes(){
         
-        var listaPersonajesJSON = new List<Personaje>();
+        var listaPersonajes = new List<Personaje>();
         // Lista donde se cargarán los personajes desde un archivo JSON; si falló la carga, quedará vacía.
 
         Console.WriteLine("¿Desea cargar personajes (desde archivo JSON) o generarlos aleatoriamente?");
@@ -56,10 +54,15 @@ class Program {
         // Modularización para usar la función luego en IntentarCargarDesdeJSON()
 
         if(consulta == 1){
-            IntentarCargarDesdeJSON(consulta, ref listaPersonajesJSON);
+            IntentarCargarDesdeJSON(consulta, ref listaPersonajes);
+        } else {
+            ProcesosJuego.CargarPersonajes(listaPersonajes);
         }
 
-        return listaPersonajesJSON;
+        Console.WriteLine("Presione para continuar al juego...");
+        Console.ReadLine();
+
+        return listaPersonajes;
 
     }
 
@@ -78,7 +81,7 @@ class Program {
         return consulta;
 
     }
-    
+
     private static void IntentarCargarDesdeJSON(int consulta, ref List<Personaje> listaPersonajesJSON){
 
         bool existeArchivo = false;
@@ -103,6 +106,10 @@ class Program {
 
         } while (!existeArchivo && consulta != 2);
         // Si el archivo existe, se terminará el proceso iterativo condicional habiendo obtenido o una lista vacia o una lista con al menos dos personajes.
+
+        if(consulta == 2){
+            ProcesosJuego.CargarPersonajes(listaPersonajesJSON);
+        }
 
     }
 

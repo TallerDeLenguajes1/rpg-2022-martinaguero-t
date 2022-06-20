@@ -17,6 +17,7 @@ public class Personaje
         CaracteristicasPersonaje = MetodosPersonajes.GenerarCaracteristicasAleatorias();
         DatosPersonaje = MetodosPersonajes.GenerarDatosAleatorios();
     }
-    // CONSULTA: ¿está bien este constructor sin parámetros usado solo para deserialización JSON?
+    // Constructor sin parámetros para soporte de deserialización JSON
+
     
 }

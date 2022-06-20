@@ -5,8 +5,6 @@ public class ManejoDeArchivos{
     
     public static void GuardarInformacionGanador(Personaje ganador)
     {
-        // CONSULTAR: El control if(!File.Exists()) File.Create() me genera un error si el archivo no existe, tengo entendido que es por un error en la condición de carrera ya que crea un nuevo stream, ¿estaría bien no usarlo y solamente usar streamwriter? StreamWriter crea el archivo si no existe.
-
         string registroGanadores = @"D:\Facultad\2do\Taller_de_Lenguajes_I\Repositorios\TPS\rpg-2022-martinaguero-t\JuegoROL\registroGanadores.csv";
 
         if(!File.Exists(registroGanadores)){
@@ -52,7 +50,6 @@ public class ManejoDeArchivos{
                 }
 
                 sr.Close();
-                // CONSULTA : es necesario?
                 
             }
         }

@@ -26,8 +26,7 @@ public class Datos
         Salud = salud;
     }
 
-    public Datos(){
-        
-    }
+    public Datos(){}
+    // Constructor sin parámetros para soporte de deserialización JSON
 
 }
