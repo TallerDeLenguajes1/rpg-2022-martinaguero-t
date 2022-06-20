@@ -16,24 +16,29 @@
 
 ## Historial de cambios
 
-## Versión 6
+### Versión 6
 
 - **Trabajo con JSON (correcciones)**
 
 La función implementada para la consulta al usuario sobre la carga de personajes de manera aleatoria o desde un archivo JSON fue movida a la clase Program ya que se considera como una función de la interfaz de interacción con el usuario.
 
+---
 
-## Versión 5
+### Versión 5
 
 - **Trabajo con JSON**
 
 Se implementaron dos funciones de utilidad para el trabajo con archivos JSON: una que guarda la información de todos los jugadores generados en una partida en un archivo JSON y otra usada para poder desarrollar una partida con datos de jugadores obtenidos de un archivo JSON.
 
+---
+
 ### Versión 4
 
--**Carga de datos de los ganadores a archivo .csv**
+- **Carga de datos de los ganadores a archivo .csv**
 
 Se implementó la carga de datos de los ganadores de cada partida a un archivo .csv., para eso se creó una nueva clase **ManejoDeArchivos** con métodos para escribir el archivo .csv y leer datos del archivo.
+
+---
 
 ### Versión 3
 
