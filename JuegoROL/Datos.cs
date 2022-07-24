@@ -25,7 +25,6 @@ public class Datos
         Edad = edad;
         Salud = salud;
     }
-
     public Datos(){}
     // Constructor sin parámetros para soporte de deserialización JSON
 

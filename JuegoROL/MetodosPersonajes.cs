@@ -34,6 +34,7 @@ public class MetodosPersonajes{
 
         string apodoAleatorio = _apodosPosibles[rand.Next(_apodosPosibles.Length)];
 
+        // Generacion de edad aleatoria con una fecha de nacimiento aleatoria entre el año 1000 y 2022.
         DateTime fechaNacimientoAleatoria = new DateTime(rand.Next(1000,2023),rand.Next(1,12),rand.Next(1,28));
 
         int edadAleatoria = DateTime.Now.Year - fechaNacimientoAleatoria.Year;

@@ -4,63 +4,76 @@ class Program {
 
     static int Main(string[] args){
 
-        MenuPrincipal();
-        return 0;
-
-    }
-    
-    public static void MenuPrincipal(){
-
         int opcionesJuego = 0;
 
-        do
+        do 
         {
-            Console.WriteLine("====== JUEGO DE ROL ======");    
-            do
-            {  
-                Console.WriteLine("--> Elija alguna de las siguientes opciones: \n1) Jugar \n2) Mostrar historial de partidas \n3) Salir del juego");
-                int.TryParse(Console.ReadLine(), out opcionesJuego);
-                
-            } while (opcionesJuego < 1 || opcionesJuego > 3);
-
-            Console.WriteLine("==============================================");
-
+            opcionesJuego = MenuDeOpcionesDeJuego();
+            
             switch (opcionesJuego)
             {
                 case 1:
-                    // Función que elige la opción de carga
-                    List<Personaje> listaPersonajes = ConsultarSobreCargaPersonajes();
-                    ProcesosJuego.DesarrollarJuegoPorRondas(listaPersonajes);
+                    // Carga de personajes (de manera aleatoria o desde JSON)
+                    List<Personaje> listaPersonajes = CargarPersonajes();
+                    ProcesosJuego.Pausa();
+
+                    // Guardado de informacion de personajes a un archivo JSON
+                    ManejoDeArchivos.GuardarJugadoresJSON(listaPersonajes);
+                    
+                    // Desarrollo del juego y obtencion del ganador
+                    Personaje ganador = ProcesosJuego.DesarrollarJuegoPorRondas(listaPersonajes);
+
+                    // Carga del personaje ganador a un archivo CSV
+                    ManejoDeArchivos.GuardarInformacionGanador(ganador);
+
                     break;
+
                 case 2:
+                    // Mostrar historial de partidas
                     ManejoDeArchivos.MostrarHistorial();
                     break;
             }
 
-            Console.WriteLine("==============================================\n");
-
         } while (opcionesJuego != 3);
+
+        return 0;
+
+    }
+    
+    public static int MenuDeOpcionesDeJuego(){
+
+        // Muestra opciones del juego y retorna la opción elegida por el usuario
+        int opcionesJuego = 0;
+
+        Console.WriteLine("====== JUEGO DE ROL ======"); 
+           
+        do
+        {  
+            Console.WriteLine("--> Elija alguna de las siguientes opciones: \n1) Jugar \n2) Mostrar historial de partidas \n3) Salir del juego");
+            int.TryParse(Console.ReadLine(), out opcionesJuego);
+            
+        } while (opcionesJuego < 1 || opcionesJuego > 3);
+
+        Console.WriteLine("==============================================");
+
+        return opcionesJuego;
 
     }
 
-
-    public static List<Personaje> ConsultarSobreCargaPersonajes(){
+    public static List<Personaje> CargarPersonajes(){
         
-        var listaPersonajes = new List<Personaje>();
-        // Lista donde se cargarán los personajes desde un archivo JSON; si falló la carga, quedará vacía.
+        List<Personaje> listaPersonajes = new List<Personaje>();
 
+        // Consulta sobre modalidad de carga de personajes
         Console.WriteLine("¿Desea cargar personajes (desde archivo JSON) o generarlos aleatoriamente?");
+
         int consulta = ConsultarAUsuario();
-        // Modularización para usar la función luego en IntentarCargarDesdeJSON()
 
-        if(consulta == 1){
-            IntentarCargarDesdeJSON(consulta, ref listaPersonajes);
-        } else {
-            ProcesosJuego.CargarPersonajes(listaPersonajes);
-        }
+        if(consulta == 1) CargarPersonajesDesdeJson(consulta, ref listaPersonajes);
+        // Se carga personajes desde JSON. Si hay un error en la carga, la lista de personajes se mantiene vacía. 
 
-        Console.WriteLine("Presione para continuar al juego...");
-        Console.ReadLine();
+        if(consulta == 2 || !listaPersonajes.Any()) listaPersonajes = ProcesosJuego.CrearPersonajesAleatoriamente();
+        // Si originalmente el usuario deseaba cargar personajes de manera aleatoria o si no se pudo cargar desde JSON, entonces se generan los personajes aleatoriamente
 
         return listaPersonajes;
 
@@ -82,7 +95,7 @@ class Program {
 
     }
 
-    private static void IntentarCargarDesdeJSON(int consulta, ref List<Personaje> listaPersonajesJSON){
+    private static void CargarPersonajesDesdeJson(int consulta, ref List<Personaje> listaPersonajes){
 
         bool existeArchivo = false;
 
@@ -94,7 +107,7 @@ class Program {
 
             if(existeArchivo){
 
-                IntentarLeerJSON(rutaArchivoJSON, ref listaPersonajesJSON);
+                LeerPersonajesDesdeJson(rutaArchivoJSON, ref listaPersonajes);
 
             } else {
 
@@ -105,15 +118,11 @@ class Program {
             }
 
         } while (!existeArchivo && consulta != 2);
-        // Si el archivo existe, se terminará el proceso iterativo condicional habiendo obtenido o una lista vacia o una lista con al menos dos personajes.
-
-        if(consulta == 2){
-            ProcesosJuego.CargarPersonajes(listaPersonajesJSON);
-        }
+        // Si el archivo existe, se terminará el proceso iterativo condicional habiendo obtenido o una lista vacia o con al menos un personaje
 
     }
 
-    private static void IntentarLeerJSON(string rutaArchivoJSON, ref List<Personaje> listaPersonajesJSON){
+    private static void LeerPersonajesDesdeJson(string rutaArchivoJSON, ref List<Personaje> listaPersonajesJSON){
 
         StreamReader reader = new StreamReader(rutaArchivoJSON);
         // NOTA: la ruta de archivo no será vacía, pues se controló que el archivo exista previamente y esta función es llamada si el archivo existe.
@@ -124,22 +133,11 @@ class Program {
 
             try
             {
-                
                 listaPersonajesJSON = JsonSerializer.Deserialize<List<Personaje>>(datosPersonajes);
-
-                int cantidadPersonajes = listaPersonajesJSON.Count;
-
-                if(cantidadPersonajes < 2){
-
-                    Console.WriteLine("ERROR: Hubo un error al leer los personajes. Se generarán aleatoriamente...");
-                    
-                    listaPersonajesJSON.Clear();
-                    // Se liberan los datos cargados a la lista.
-                }
             }
             catch 
             {
-                Console.WriteLine("ERROR: El archivo JSON contiene información inválida. Se generarán los personajes aleatoriamente... ");
+                Console.WriteLine("ERROR: El archivo JSON contiene información inválida o no pudo ser leído correctamente. Se generarán los personajes aleatoriamente... ");
 
             }
 
@@ -147,14 +145,8 @@ class Program {
             Console.WriteLine("ERROR: No se encontró información de personajes. Se generarán aleatoriamente... ");
         }
 
-        if(!listaPersonajesJSON.Any()){
-            ProcesosJuego.CargarPersonajes(listaPersonajesJSON);
-        }
-        // Si la lista no tiene elementos (no fue cargada desde un JSON), se carga aleatoriamente.
-
         reader.Close();
         // Se cierra el stream de lectura
-            
 
     }
    

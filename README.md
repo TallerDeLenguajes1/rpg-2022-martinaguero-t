@@ -16,6 +16,29 @@
 
 ## Historial de cambios
 
+### Versión 7
+
+- **Correcciones y refactorización**
+
+Se refactorizó el código para distribuir de mejor manera la responsabilidad entre los distintos métodos utilizados.
+
+Algunos cambios:
+
+El método **MostrarListaPersonajes** fue renombrado como **MostrarPersonajes**.
+
+Ya no se realiza la carga de los personajes generados a un archivo JSON dentro del método **DesarrollarJuegoPorRondas** sino que se implementa luego de la carga de los personajes con el método **GuardarJugadoresJSON**.
+
+El método **MostrarYBonificarGanadorRonda** fue eliminado, y para el procesamiento de los resultados de cada ronda se crearon otros dos métodos: **ObtenerGanadorRonda** y **EliminarPerdedor** que respectivamente determinan el ganador de la ronda y eliminan al jugador perdedor de la lista de personajes. Los resultados se muestran con otro método, **MostrarResultadoRonda**.
+
+Otros procedimientos (como aquellos para mostrar los personajes de cada ronda o mostrar resultados de un torneo) también fueron modularizados.
+
+El método **DesarrollarJuegoPorRondas** ahora devuelve el ganador de un torneo con el fin de guardar su información en un archivo CSV.
+
+El método **MenuPrincipal** fue refactorizado para separar la parte correspondiente a la interfaz de interacción con el usuario (menú de opciones) de la parte correspondiente a la ejecución del resto del programa (desarrollo del juego o muestra de historial de partidas).
+
+El método CargarPersonajes fue reemplazado por otro método, **CrearPersonajesAleatoriamente**, que devuelve una lista de personajes generados aleatoriamente. La diferencia es que no recibe como parámetro una lista sino que la misma se crea dentro del método.
+
+En el método LeerPersonajesDesdeJson se eliminó el control de que la cantidad de personajes cargados sea 2 o más. Se considera que con un solo personaje, el mismo será el ganador del torneo.
 ### Versión 6
 
 - **Trabajo con JSON (correcciones)**

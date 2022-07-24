@@ -2,52 +2,54 @@ namespace JuegoROL;
 public class ProcesosJuego
 {
     // Clase con métodos usados para el desarrollo del juego
-    public static void DesarrollarJuegoPorRondas(List<Personaje> listaPersonajes)
+    public static Personaje DesarrollarJuegoPorRondas(List<Personaje> listaPersonajes)
     {
-        if(listaPersonajes.Count() > 2){
+        // Método que desarrolla el juego por rondas y retorna el personaje ganador
 
-            Console.WriteLine("=====> NUEVO TORNEO por RONDAS <=====");
+        Console.WriteLine("=====> NUEVO TORNEO por RONDAS <=====");
 
-            MostrarListaPersonajes(listaPersonajes);
+        MostrarPersonajes(listaPersonajes);
 
-            ManejoDeArchivos.GuardarJugadoresJSON(listaPersonajes);
-            // Guardo la información de los jugadores generados en un archivo json.
+        int numRonda = 1;
 
-            int numRonda = 1;
+        // Combate por rondas entre dos personajes
+        while (listaPersonajes.Count > 1)
+        {
+            Personaje jugador1 = listaPersonajes[0];
+            Personaje jugador2 = listaPersonajes[1];
 
-            // Combate por rondas entre dos personajes
-            while (listaPersonajes.Count > 1)
-            {
+            // Se muestran los jugadores de cada ronda
+            MostrarContrincantesRonda(numRonda,jugador1,jugador2);
 
-                Console.WriteLine($"====> RONDA {numRonda}:");
-                Personaje jugador1 = listaPersonajes[0];
-                Personaje jugador2 = listaPersonajes[1];
+            // Se desarrolla el combate por turnos entre dos jugadores.
+            CombatePorTurnos(jugador1, jugador2);
 
-                Console.WriteLine($"~ Los jugadores de esta ronda son: {jugador1.DatosPersonaje.Nombre}, {jugador1.DatosPersonaje.Apodo} y {jugador2.DatosPersonaje.Nombre}, {jugador2.DatosPersonaje.Apodo}");
+            // Procesamiento de los resultados
+            Personaje? ganador = ObtenerGanadorRonda(jugador1, jugador2);
 
-                // Se desarrolla el combate por turnos entre dos jugadores.
-                CombatePorTurnos(jugador1, jugador2);
+            // En caso de no haber empate, se elimina el perdedor y se bonifica al ganador (si es que no es la última ronda)
+            if(ganador != null){
 
-                // Se muestra y bonifica la salud del ganador de la ronda
-                MostrarYBonificarGanadorRonda(listaPersonajes, jugador1, jugador2);
+                if(ganador == jugador1){
+                    EliminarPerdedor(listaPersonajes,jugador2);
+                } else {
+                    EliminarPerdedor(listaPersonajes,jugador1);
+                }
 
-                numRonda++;
-                Console.WriteLine("Presione cualquier tecla para empezar la próxima ronda:");
-                Console.ReadLine();
-                
+                // No se bonifica al ganador del torneo (cuando queda un solo personaje, ese es el ganador)
+                if(listaPersonajes.Count > 1) BonificarSaludGanador(ganador);
             }
 
-            Console.WriteLine("============================================================================");
-            Console.WriteLine($"GANADOR/A DE ESTE TORNEO: ¡{listaPersonajes[0].DatosPersonaje.Nombre}, {listaPersonajes[0].DatosPersonaje.Apodo}!");
-            Console.WriteLine("============================================================================\n");
+            MostrarResultadoRonda(ganador);
+            Pausa();
+
+            numRonda++;
             
-            ManejoDeArchivos.GuardarInformacionGanador(listaPersonajes[0]);
-
-        } else {
-
-            Console.WriteLine("Hubo un error en la carga de los personajes. Intente nuevamente.");
-
         }
+
+        MostrarResultadoTorneo(listaPersonajes[0]);
+
+        return listaPersonajes[0];
 
     }
 
@@ -79,31 +81,24 @@ public class ProcesosJuego
         }
     }
 
-    private static void MostrarYBonificarGanadorRonda(List<Personaje> listaPersonajes, Personaje jugador1, Personaje jugador2)
-    {
+    private static Personaje? ObtenerGanadorRonda( Personaje jugador1, Personaje jugador2)
+    {   
         if (jugador1.DatosPersonaje.Salud == jugador2.DatosPersonaje.Salud)
         {
-            Console.WriteLine("¡Hubo un empate!");
-
+            return null;
         } else{
-
             if (jugador1.DatosPersonaje.Salud > jugador2.DatosPersonaje.Salud){
-
-                Console.WriteLine($"¡El ganador de esta ronda es el jugador: {jugador1.DatosPersonaje.Nombre}, {jugador1.DatosPersonaje.Apodo}!\n");
-
-                listaPersonajes.Remove(jugador2);
-                BonificarSaludGanador(jugador1);
-
+                return jugador1;
             } else {
-
-                Console.WriteLine($"¡El ganador de esta ronda es el jugador: {jugador2.DatosPersonaje.Nombre}, {jugador2.DatosPersonaje.Apodo}!\n");
-
-                listaPersonajes.Remove(jugador1);
-                BonificarSaludGanador(jugador2);
-
+                return jugador2;
             }
         }
     }
+
+    private static void EliminarPerdedor(List<Personaje> listaPersonajes,Personaje jugadorPerdedor){
+        listaPersonajes.Remove(jugadorPerdedor);
+    }
+
     private static void BonificarSaludGanador(Personaje jugadorGanador)
     {
         float bonus = jugadorGanador.DatosPersonaje.Salud * (float)0.2;
@@ -114,6 +109,31 @@ public class ProcesosJuego
             jugadorGanador.DatosPersonaje.Salud += bonus;
         }
 
+    }
+
+    private static void MostrarResultadoRonda(Personaje jugadorGanador){
+
+        if(jugadorGanador == null){
+            Console.WriteLine("¡Hubo un empate!");
+        } else {
+            Console.WriteLine($"¡El/la ganador/a de la ronda es: {jugadorGanador.DatosPersonaje.Nombre}, {jugadorGanador.DatosPersonaje.Apodo}!");
+        }
+
+    }
+
+    private static void MostrarContrincantesRonda(int numRonda, Personaje jugador1, Personaje jugador2){
+        Console.WriteLine($"====> RONDA {numRonda}:");
+        Console.WriteLine($"~ Los jugadores de esta ronda son: {jugador1.DatosPersonaje.Nombre}, {jugador1.DatosPersonaje.Apodo} y {jugador2.DatosPersonaje.Nombre}, {jugador2.DatosPersonaje.Apodo}");
+    }
+    public static void Pausa(){
+        Console.WriteLine("Presione cualquier tecla para continuar...");
+        Console.ReadLine();
+    }
+
+    public static void MostrarResultadoTorneo(Personaje ganador){
+        Console.WriteLine("============================================================================");
+        Console.WriteLine($"GANADOR/A DE ESTE TORNEO: ¡{ganador.DatosPersonaje.Nombre}, {ganador.DatosPersonaje.Apodo}!");
+        Console.WriteLine("============================================================================\n");
     }
 
     private static void Atacar(Personaje jugadorAtacante, Personaje jugadorDefensor)
@@ -161,7 +181,7 @@ public class ProcesosJuego
         Console.Write("\n");
     }
 
-    private static void MostrarListaPersonajes(List<Personaje> listaPersonajes)
+    private static void MostrarPersonajes(List<Personaje> listaPersonajes)
     {
         Console.WriteLine("-> Se cargaron los siguientes personajes: ");
 
@@ -178,17 +198,22 @@ public class ProcesosJuego
         Console.WriteLine("======================>\n");
     }
 
-    public static void CargarPersonajes(List<Personaje> listaPersonajes)
+    public static List<Personaje> CrearPersonajesAleatoriamente()
     {
 
+        var listaPersonajes = new List<Personaje>();
+
         Random rand = new Random();
-        int cantidadPersonajes = rand.Next(2, 6);
-        // Se crean aleatoriamente entre 2 y 5 personajes.
+
+        int cantidadPersonajes = rand.Next(2,6);
+        // Se crean aleatoriamente entre 2 y 5 personajes. 
 
         for (int i = 0; i < cantidadPersonajes; i++)
         {
             listaPersonajes.Add(MetodosPersonajes.CrearPersonaje());
         }
+
+        return listaPersonajes;
 
     }
 
