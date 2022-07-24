@@ -39,6 +39,8 @@ El método **MenuPrincipal** fue refactorizado para separar la parte correspondi
 El método CargarPersonajes fue reemplazado por otro método, **CrearPersonajesAleatoriamente**, que devuelve una lista de personajes generados aleatoriamente. La diferencia es que no recibe como parámetro una lista sino que la misma se crea dentro del método.
 
 En el método LeerPersonajesDesdeJson se eliminó el control de que la cantidad de personajes cargados sea 2 o más. Se considera que con un solo personaje, el mismo será el ganador del torneo.
+
+---
 ### Versión 6
 
 - **Trabajo con JSON (correcciones)**
