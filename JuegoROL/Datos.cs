@@ -2,7 +2,7 @@ namespace JuegoROL;
 
 public enum TipoPersonaje{
     Mage,
-    Warrior,
+    Soldier,
     Priest,
     Archer,
     Knight

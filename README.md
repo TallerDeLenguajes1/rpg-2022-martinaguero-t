@@ -16,6 +16,25 @@
 
 ## Historial de cambios
 
+---
+
+### Versión 8
+
+- **Otras correcciones y refactorización**
+
+Se modificaron los métodos **LeerPersonajesDesdeJson**, **CargarPersonajesDesdeJson**, **CargarPersonajes**, y **MenuDeOpcionesJuego** para una mejor distribución de responsabilidades y separación de lo correspondiente a la interfaz del juego.
+
+Corrección en el método **GuardarJugadoresJSON**: ahora cada vez que se llama al método, se sobreescribe el archivo _registroJugadores.json_ ya que de no hacerlo se genera un JSON inválido. De esta manera, en dicho archivo queda guardado el grupo de jugadores del combate anterior.
+
+- **Implementación de consumo de API Clima**
+
+Se implementaron las siguientes clases que permiten obtener datos del clima de distintas localidades de Argentina (link API: <https://ws.smn.gob.ar/map_items/weather>): **Clima**, **Localidad** y **UtilidadClima**. Las dos primeras sirven de soporte para deserealización del JSON obtenido de la consulta a la API, mientras que la última contiene métodos para obtener los datos de la API y aplicar los mismos a la mecánica del juego.
+
+Como localidades posibles, se eligieron San Miguel de Tucumán, Córdoba, Mendoza, San Salvador de Jujuy, La Plata, Capital Federal, Neuquén y Ushuaia. En cada combate, se elige una de ellas al azar. En caso de no poder comunicar con la API, no se define un escenario de combate ni se aplican efectos de clima sobre los personajes.
+
+Se consideraron cuatro posibles estados del clima: _Despejado_, _Neblina_, _Nublado_ y _Lluvioso_. Según cada estado, se modifican levemente algunas características de los personajes de acuerdo con su tipo o clase.
+
+---
 ### Versión 7
 
 - **Correcciones y refactorización**

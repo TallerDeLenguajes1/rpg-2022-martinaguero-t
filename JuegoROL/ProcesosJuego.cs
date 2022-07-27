@@ -126,14 +126,14 @@ public class ProcesosJuego
         Console.WriteLine($"~ Los jugadores de esta ronda son: {jugador1.DatosPersonaje.Nombre}, {jugador1.DatosPersonaje.Apodo} y {jugador2.DatosPersonaje.Nombre}, {jugador2.DatosPersonaje.Apodo}");
     }
     public static void Pausa(){
-        Console.WriteLine("Presione cualquier tecla para continuar...");
+        Console.WriteLine("\nPresione cualquier tecla para continuar...");
         Console.ReadLine();
     }
 
     public static void MostrarResultadoTorneo(Personaje ganador){
-        Console.WriteLine("============================================================================");
+        Console.WriteLine("=================================================================================");
         Console.WriteLine($"GANADOR/A DE ESTE TORNEO: ¡{ganador.DatosPersonaje.Nombre}, {ganador.DatosPersonaje.Apodo}!");
-        Console.WriteLine("============================================================================\n");
+        Console.WriteLine("=================================================================================\n");
     }
 
     private static void Atacar(Personaje jugadorAtacante, Personaje jugadorDefensor)

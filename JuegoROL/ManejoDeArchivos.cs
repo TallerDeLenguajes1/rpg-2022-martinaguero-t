@@ -61,7 +61,7 @@ public class ManejoDeArchivos{
 
         string jugadoresGenerados = JsonSerializer.Serialize(listaPersonajes);
 
-        using (StreamWriter writer = new StreamWriter(rutaArchivoJson,true))
+        using (StreamWriter writer = new StreamWriter(rutaArchivoJson))
         {
             writer.WriteLine(jugadoresGenerados);
         }

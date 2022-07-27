@@ -104,7 +104,7 @@ public class MetodosPersonajes{
 
                 break;
 
-            case TipoPersonaje.Warrior:
+            case TipoPersonaje.Soldier:
 
                 bonus = personaje.CaracteristicasPersonaje.Fuerza*incremento;
 
@@ -137,10 +137,12 @@ public class MetodosPersonajes{
 
                 if(bonus <= maxOtrasCaracteristicas)
                 personaje.CaracteristicasPersonaje.Armadura = (float) Math.Round(bonus, 2);
+                // cast a float pues Round devuelve double
 
                 break;
 
         }
     }
+
 
 }
