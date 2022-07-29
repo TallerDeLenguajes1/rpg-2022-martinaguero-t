@@ -105,7 +105,8 @@ Para evitar desbalance entre los personajes, decidí solamente incrementar la sa
 ### Versión 2
 
 - **Métodos para el desarrollo del juego**
-Se implementaron tres nuevos métodos que permiten mostrar por pantalla información de un personaje.
+
+Se agregaron tres nuevos métodos que permiten mostrar por pantalla información de un personaje.
 
 Se implementó un método, **BonusPersonaje** que se aplica al crear un personaje y otorga un bonus adicional del 10% sobre alguna de las características del personaje en base a su tipo. Los bonus son los siguientes: Mage y Priest - Destreza, Warrior - Fuerza, Archer - Velocidad, Knight - Armadura. NOTA: el bonus solo es aplicable si el personaje no tiene el mayor valor posible en la caracteristica a bonificar.
 
@@ -114,9 +115,11 @@ Se implementó un método, **BonusPersonaje** que se aplica al crear un personaj
 ### Versión 1
 
 - **Implementación de los personajes**
+
 Se crearon nuevas clases que permiten el manejo de personajes. La clase principal es **Personaje**, con dos campos que a su vez corresponden a otras dos clases: **Caracteristicas** y **Datos** del personaje.
 
 - **Métodos para el desarrollo del juego**
+
 Se creó una nueva clase llamada **ProcesosJuego** con métodos que serán usados para el desarrollo del juego (creación de personajes, generación aleatoria de datos de un personaje, desarrollo del combate, entre otros).
 
 Para crear un personaje (instancia de la clase Personaje), se usa un método llamado **CrearPersonaje** que usa otros dos métodos (**GenerarDatosAleatorios** y **GenerarCaracteristicasAleatorias**) para instanciar un objeto de la clase Datos y otro de la clase Caracteristicas a fin de pasarlos como parámetro al constructor de la clase Personaje.
